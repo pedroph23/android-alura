@@ -4,4 +4,6 @@
     <item name="activity_students_form_phone" type="id" />
     <item name="activity_students_form_email" type="id" />
     <item name="activity_students_done_btn" type="id" />
+    <item name="activity_students_item_phone" type="id" />
+    <item name="activity_students_item_name" type="id" />
 </resources>

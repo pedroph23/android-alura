@@ -27,7 +27,6 @@ public class StudentsFormActivity extends AppCompatActivity {
     private EditText name;
     private EditText phone;
     private EditText email;
-    private boolean isEdited = false;
     private Student studentState;
 
     @SuppressLint("ResourceType")
@@ -50,7 +49,7 @@ public class StudentsFormActivity extends AppCompatActivity {
         studentState  = (Student) getIntent().getSerializableExtra("student");
 
         if(studentState != null) {
-            isEdited = true;
+            boolean isEdited = true;
             setTitle(TITLE_EDIT);
             setData(studentState, name, phone, email);
         }
@@ -85,6 +84,7 @@ public class StudentsFormActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         save(constructor(name, phone, email));

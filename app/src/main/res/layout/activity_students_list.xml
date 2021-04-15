@@ -28,6 +28,8 @@
         android:layout_marginBottom="26dp"
         android:clickable="true"
         android:src="@drawable/ic_action_new_student"
-        app:backgroundTint="#673AB7" />
+        app:backgroundTint="#673AB7"
+        android:contentDescription="Floating button"
+        android:focusable="true" />
 
 </RelativeLayout>

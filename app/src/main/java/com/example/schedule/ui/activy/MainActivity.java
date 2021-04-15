@@ -1,35 +1,32 @@
 package com.example.schedule.ui.activy;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ActionProvider;
 
 import com.example.schedule.R;
 import com.example.schedule.dao.StudentDAO;
 import com.example.schedule.models.Student;
 import com.example.schedule.models.enums.OptionMenu;
+import com.example.schedule.ui.adapters.StudentsListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
     private StudentDAO dao = new StudentDAO();
-    private ArrayAdapter<Student> adapter;
+    private StudentsListAdapter adapter;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -44,20 +41,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        listStudent();
+        listStudents();
         actionFab();
         selectRow();
+
     }
 
-    private void listStudent() {
-        ListView views = findViewById(R.id.activity_student_list_listview );
-        adapter = new ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                dao.getAll());
-        views.setAdapter(adapter);
-
+    private void listStudents() {
+        ListView views = findViewById(R.id.activity_student_list_listview);
+        this.configureAdapter(views);
         registerForContextMenu(views);
+    }
+
+
+    private void configureAdapter(ListView views) {
+        adapter = new StudentsListAdapter(this, dao.getAll());
+        views.setAdapter(adapter);
     }
 
     /**
@@ -85,15 +84,26 @@ public class MainActivity extends AppCompatActivity {
         String titleOptionMenu = item.getTitle().toString();
 
         if(titleOptionMenu == OptionMenu.DELETE.getNameOption()) {
-            this.removeRow(item);
+            openAlertDialog(item);
         }
 
         return super.onContextItemSelected(item);
     }
 
+    private void openAlertDialog(@NonNull MenuItem item) {
+        new AlertDialog.Builder(this)
+                .setTitle("Remove Student")
+                .setMessage("Do you want to remove student ?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    this.removeRow(item);
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
     private void removeRow(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Student student = adapter.getItem(menuInfo.position);
+        Student student = (Student) adapter.getItem(menuInfo.position);
         adapter.remove(student);
     }
 
